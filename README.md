@@ -1,11 +1,8 @@
-<h1 align="center">
-    <br />
-    Photino.NET.API
-    <br />
-    <font style="font-size:18px;">Photino.NET API for ease</font>
-    <br />
-    <br />
-</h1>
+<br />
+<h1 align="center">Photino.NET.API</h1>
+<h3 align="center">Photino.NET API for ease</h3>
+<br />
+<br />
 <br />
 Available for:
 
