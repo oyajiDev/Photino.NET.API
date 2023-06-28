@@ -14,7 +14,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Photino.NET" Version="2.4.0" />
-        <ProjectReference Include="../Sources/Photino.NET.API.csproj" />
+        <ProjectReference Include="../Source/Photino.NET.API.csproj" />
     </ItemGroup>
 
 </Project>
