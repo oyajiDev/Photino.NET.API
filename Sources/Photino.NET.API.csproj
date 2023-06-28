@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+
+        <OutputPath>build</OutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageId>Photino.NET.API</PackageId>
+        <Version>0.0.1</Version>
+        <Authors>oyajiDev</Authors>
+
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/oyajiDev/Photino.NET.API</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="/" />
+        <!-- <None Include="photino.net.api.js" CopyToOutputDirectory="PreserveNewest" /> -->
+        <EmbeddedResource Include="photino.net.api.js" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Photino.NET" Version="2.4.0" />
+    </ItemGroup>
+
+</Project>
