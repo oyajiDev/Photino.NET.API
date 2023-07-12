@@ -7,6 +7,7 @@ using PhotinoNET;
 
 namespace Photino.NET.API.Tests {
     internal class Program {
+        [STAThread]
         static void Main(String[] args) {
             var appExeDir = AppContext.BaseDirectory;
             String iconFile;
@@ -23,7 +24,7 @@ namespace Photino.NET.API.Tests {
             var window = new PhotinoAPIWindow()
                 .RegisterAPI(new APIs.Counter())
                 .SetTitle("Photino.NET.API.Tests").SetIconFile(iconFile)
-                .SetUseOsDefaultSize(false).SetWidth(600).SetHeight(400).Center()
+                .SetUseOsDefaultSize(false).SetWidth(600).SetHeight(400).Center().SetDevToolsEnabled(true)
                 .Load(Path.Join(appExeDir, "dist", "index.html"));
 
             window.WaitForClose();
