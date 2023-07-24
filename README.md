@@ -12,7 +12,7 @@ Available for:
 Supported Platforms:
 
 - Windows 10+ (x86, amd64, arm64)
-- Linux Distos (amd64, arm64)
+- Linux(WSL) (amd64)
 - OSX 11+ (amd64, arm64)
 
 <br />
@@ -31,17 +31,27 @@ dotnet add package Photino.NET.API --version {version}
 <br />
 
 # Usage
-- Sequentials
+- use "PhotinoAPIWindow" instead "PhotinoWindow".
+- check [Test](https://github.com/oyajiDev/Photino.NET.API/blob/master/Tests/Program.cs) or [PhotinoAPIWindow](https://github.com/oyajiDev/Photino.NET.API/blob/master/Source/PhotinoAPIWindow.cs) class.
 ```c#
+using System;
 using PhotinoNET;
 
+namespace Photino.NET.API.Tests {
+    internal class Program {
+        [STAThread]
+        static void Main(String[] args) {
+            var appExeDir = AppContext.BaseDirectory;
 
-var appExeDir = AppContext.BaseDirectory;
-var window = new PhotinoAPIWindow()
-    .RegisterAPI(new APIs.Counter())
-    .SetTitle("Photino.NET.API.Tests")
-    .SetUseOsDefaultSize(false).SetWidth(600).SetHeight(400).Center()
-    .Load(Path.Join(appExeDir, "dist", "index.html"));
+            var window = new PhotinoAPIWindow()
+                .RegisterAPI(new APIs.Counter())
+                .SetTitle("Photino.NET.API.Tests")
+                .SetUseOsDefaultSize(false)
+                .SetWidth(600).SetHeight(400).Center()
+                .LoadFile(Path.Join(appExeDir, "dist", "index.html"));
 
-window.WaitForClose();
+            window.WaitForClose();
+        }
+    }
+}
 ```

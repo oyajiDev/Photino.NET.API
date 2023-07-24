@@ -9,7 +9,7 @@
 
     <PropertyGroup>
         <PackageId>Photino.NET.API</PackageId>
-        <Version>0.0.1</Version>
+        <Version>0.0.2</Version>
         <Authors>oyajiDev</Authors>
 
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -20,7 +20,7 @@
     <ItemGroup>
         <None Include="../README.md" Pack="true" PackagePath="/" />
         <!-- <None Include="photino.net.api.js" CopyToOutputDirectory="PreserveNewest" /> -->
-        <EmbeddedResource Include="photino.net.api.js" />
+        <EmbeddedResource Include="photino.net.api.min.js" />
     </ItemGroup>
 
     <ItemGroup>

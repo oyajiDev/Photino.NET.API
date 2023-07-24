@@ -1,0 +1,12 @@
+{
+    "name": "source",
+    "version": "1.0.0",
+    "scripts": {
+        "minify": "uglifyjs photino.net.api.js --compress --mangle --output photino.net.api.min.js",
+        "build": "npm run minify; dotnet build"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "uglify-js": "^3.17.4"
+    }
+}

@@ -9,11 +9,14 @@
 
     <ItemGroup>
         <None Update="dist/**" CopyToOutputDirectory="PreserveNewest" />
+
+        <EmbeddedResource Include="assets/**" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
         <PackageReference Include="Photino.NET" Version="2.4.0" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
         <ProjectReference Include="../Source/Photino.NET.API.csproj" />
     </ItemGroup>
 
