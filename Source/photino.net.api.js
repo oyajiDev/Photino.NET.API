@@ -23,6 +23,10 @@ function $ReceiveMessage(message) {
 
     if (data.state == "success") {
         if (data.job == "init") {
+            if (!data.contextMenuEnabled) {
+                document.body.addEventListener("contextmenu", e => e.preventDefault());
+            }
+
             for (var name of data.methods) {
                 $BindMethod(name);
             }

@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.CommandLine;
-using System.Runtime.InteropServices;
 using PhotinoNET;
 
 
@@ -21,34 +20,31 @@ namespace Photino.NET.API.Tests {
         static void Run(Boolean isDebug) {
             var appExeDir = AppContext.BaseDirectory;
             // String iconFile;
-            // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            // if (PhotinoAPIWindow.IsWindowsPlatform) {
             //     iconFile = Path.Join(appExeDir, "dist", "icon.ico");
             // }
-            // else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
+            // else if (PhotinoWindow.IsMacOsPlatform) {
             //     iconFile = Path.Join(appExeDir, "dist", "icon.icns");
             // }
             // else {
             //     iconFile = Path.Join(appExeDir, "dist", "icon.png");
             // }
             String iconName;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+            if (PhotinoAPIWindow.IsWindowsPlatform) {
                 iconName = "Photino.NET.API.Tests.assets.icons.icon.ico";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
-                iconName = "Photino.NET.API.Tests.assets.icons.icon.icns";
             }
             else {
                 iconName = "Photino.NET.API.Tests.assets.icons.icon.png";
             }
 
             var window = new PhotinoAPIWindow()
-                .SetLogVerbosity(isDebug ? 1 : 0)
+                .SetLogVerbosity(isDebug)
                 .RegisterAPI(new APIs.Counter())
                 .SetTitle("Photino.NET.API.Tests")
                 // .SetIconFile(iconFile)
                 .SetIconFromResource(iconName)
                 .SetUseOsDefaultSize(false).SetWidth(600).SetHeight(400).Center()
-                .SetDevToolsEnabled(isDebug).SetRemoveTempFile(!isDebug)
+                .SetDevToolsEnabled(isDebug).SetContextMenuEnabled(isDebug).SetRemoveTempFile(!isDebug)
                 .LoadFile(Path.Join(appExeDir, "dist", "index.html"));
 
             window.WaitForClose();

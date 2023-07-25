@@ -10,3 +10,16 @@
 - add "SetIconFromResource", "SetRemoveTempFile" method.
 - "SetLogVerbosity" method change verbosity first.
 - update "Test".
+
+<br />
+
+## 0.0.3
+- make "ContextMenuEnabled" property to PhotinoAPIWindow.
+  - automatically change value to True when tested(Mac).
+- change parameter type of "SetLogVerbosity" from Int32 to Boolean.
+- change "JS_API" to private property.
+- change "RemoveTempFile" to public property.
+- use "photino.net.api.js" if DevToolsEnabled else "photino.net.api.min.js".
+- register "WindowClosingHandler" to remove temp files.
+  - not working on Mac ARM(M1, M2).
+- update "Test", "README".

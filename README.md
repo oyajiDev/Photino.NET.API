@@ -44,11 +44,15 @@ namespace Photino.NET.API.Tests {
             var appExeDir = AppContext.BaseDirectory;
 
             var window = new PhotinoAPIWindow()
+                .SetLogVerbosity(true)
                 .RegisterAPI(new APIs.Counter())
-                .SetTitle("Photino.NET.API.Tests")
+                .SetTitle("{title}")
                 .SetUseOsDefaultSize(false)
                 .SetWidth(600).SetHeight(400).Center()
-                .LoadFile(Path.Join(appExeDir, "dist", "index.html"));
+                .SetDevToolsEnabled(true)
+                .SetContextMenuEnabled(true)
+                .SetRemoveTempFile(false)
+                .LoadFile("{file}");
 
             window.WaitForClose();
         }

@@ -9,12 +9,14 @@ using System.Linq;
 
 namespace PhotinoNET {
     public class PhotinoAPIWindow: PhotinoWindow {
-        public object JS_API;
+        private object JS_API { get; set; }
         private List<String> excludeNames = new List<String>() { "GetType", "ToString", "Equals", "GetHashCode" };
         private String apiJsFile = null;
         private String tempHtmlFile = null;
         private String tempIconFile = null;
-        private Boolean removeTempFile = false;
+
+        public Boolean RemoveTempFile { get; set; } = false;
+        public new Boolean ContextMenuEnabled { get; set; } = true;
 
         private List<String> apiMethodNames {
             get => this.JS_API.GetType().GetMethods().Where(
@@ -33,8 +35,9 @@ namespace PhotinoNET {
             if (data["job"] == "init") {
                 result["state"] = "success";
                 result["methods"] = this.apiMethodNames;
+                result["contextMenuEnabled"] = this.ContextMenuEnabled;
 
-                if (this.removeTempFile || !this.DevToolsEnabled) {
+                if (this.RemoveTempFile || !this.DevToolsEnabled) {
                     if (this.apiJsFile != null) {
                         File.Delete(this.apiJsFile);
                     }
@@ -66,13 +69,29 @@ namespace PhotinoNET {
                 }
             }
 
-            (sender as PhotinoWindow).SendWebMessage(
+            (sender as PhotinoAPIWindow).SendWebMessage(
                 JsonConvert.SerializeObject(result)
             );
+        }
+        private Boolean onWindowClosing(Object sender, EventArgs e) {
+            if (this.apiJsFile != null && File.Exists(this.apiJsFile)) {
+                File.Delete(this.apiJsFile);
+            }
+
+            if (this.tempHtmlFile != null && File.Exists(this.tempHtmlFile)) {
+                File.Delete(this.tempHtmlFile);
+            }
+
+            if (this.tempIconFile != null && File.Exists(this.tempIconFile)) {
+                File.Delete(this.tempIconFile);
+            }
+
+            return false;
         }
 
         public PhotinoAPIWindow(): base() {
             this.RegisterWebMessageReceivedHandler(this.onMessageReceive);
+            this.RegisterWindowClosingHandler(this.onWindowClosing);
         }
 
         public PhotinoAPIWindow RegisterAPI(object jsapi) {
@@ -97,10 +116,11 @@ namespace PhotinoNET {
         }
         public PhotinoAPIWindow LoadFile(String path, Boolean includeApiScript = true) {
             if (includeApiScript) {
-                // String jsScript;
-                this.apiJsFile = Path.Join(Path.GetDirectoryName(path), ".photino.net.api.min.js");
+                var apiScriptFileName = this.DevToolsEnabled ? ".photino.net.api.js" : ".photino.net.api.min.js";
+                this.apiJsFile = Path.Join(Path.GetDirectoryName(path), apiScriptFileName);
+
                 var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.photino.net.api.min.js")) {
+                using (var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}{apiScriptFileName}")) {
                     using (var reader = new StreamReader(stream)) {
                         File.WriteAllText(this.apiJsFile, reader.ReadToEnd());
                     }
@@ -199,7 +219,7 @@ namespace PhotinoNET {
             return this;
         }
         public new PhotinoAPIWindow SetContextMenuEnabled(Boolean enabled) {
-            base.SetContextMenuEnabled(enabled);
+            this.ContextMenuEnabled = enabled;
             return this;
         }
         public new PhotinoAPIWindow SetDevToolsEnabled(Boolean enabled) {
@@ -224,7 +244,7 @@ namespace PhotinoNET {
         }
         public PhotinoAPIWindow SetIconFromResource(String resourceName) {
             var assembly = System.Reflection.Assembly.GetCallingAssembly();
-            this.tempIconFile = Path.Join(Path.GetDirectoryName(assembly.Location), resourceName);
+            this.tempIconFile = Path.Join(Path.GetDirectoryName(assembly.Location), "." + resourceName);
             using (var stream = assembly.GetManifestResourceStream(resourceName)) {
                 using (var writeStream = File.Create(this.tempIconFile)) {
                     stream.CopyTo(writeStream);
@@ -242,8 +262,11 @@ namespace PhotinoNET {
             return this;
         }
         public new PhotinoAPIWindow SetLogVerbosity(Int32 verbosity) {
-            base.LogVerbosity = verbosity;
-            base.SetLogVerbosity(verbosity);
+            throw new NotImplementedException();
+        }
+        public PhotinoAPIWindow SetLogVerbosity(Boolean verbosity) {
+            base.LogVerbosity = verbosity ? 1 : 0;
+            base.SetLogVerbosity(verbosity ? 1 : 0);
             return this;
         }
         public new PhotinoAPIWindow SetMaximized(Boolean maximized) {
@@ -299,7 +322,7 @@ namespace PhotinoNET {
             return this;
         }
         public PhotinoAPIWindow SetRemoveTempFile(Boolean removeTempFile) {
-            this.removeTempFile = removeTempFile;
+            this.RemoveTempFile = removeTempFile;
             return this;
         }
         public new PhotinoAPIWindow Win32SetWebView2Path(String data) {

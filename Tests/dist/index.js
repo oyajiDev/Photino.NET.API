@@ -1,7 +1,7 @@
 
-window.addEventListener("DOMContentLoaded", () => {
-    console.log(window.photino);
-});
+// window.addEventListener("DOMContentLoaded", () => {
+//     console.log(window.photino);
+// });
 
 
 function $updateCount(message) {
