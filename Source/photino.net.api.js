@@ -1,12 +1,16 @@
 
-function $BindMethod(name) {
-    window.photino[name] = (args = [], callback = null) => {
+function $BindMethod(apiName, methodName) {
+    if (window.photino[apiName] == undefined) {
+        window.photino[apiName] = {};
+    }
+
+    window.photino[apiName][methodName] = (args = [], callback = null) => {
         if (callback != null) {
-            window.$photino.callbacks[name] = callback;
+            window.$photino.callbacks[`${apiName}-${methodName}`] = callback;
         }
         
         var req = JSON.stringify({
-            "job": name, "args": args
+            "job": "invoke", "api": apiName, "method": methodName, "args": args
         });
         window.external.sendMessage(req);
     };
@@ -27,12 +31,14 @@ function $ReceiveMessage(message) {
                 document.body.addEventListener("contextmenu", e => e.preventDefault());
             }
 
-            for (var name of data.methods) {
-                $BindMethod(name);
+            for (var apiName in data.apis) {
+                for (var methodName of data.apis[apiName]) {
+                    $BindMethod(apiName, methodName);
+                }
             }
         }
         else {
-            var callback = window.$photino.callbacks[data.job];
+            var callback = window.$photino.callbacks[`${data.api}-${data.method}`];
             if (callback != undefined) {
                 callback(data.message);
             }
@@ -45,7 +51,7 @@ function $ReceiveMessage(message) {
 
 window.addEventListener("DOMContentLoaded", () => {
     window.photino = {};
-    window.$photino = { "callbacks": {} };
+    window.$photino = { callbacks: {} };
 
     window.external.receiveMessage($ReceiveMessage);
     window.external.sendMessage(JSON.stringify({

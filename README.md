@@ -59,3 +59,14 @@ namespace Photino.NET.API.Tests {
     }
 }
 ```
+- call dotnet method by "API class name" and "method name".
+- check [Test](https://github.com/oyajiDev/Photino.NET.API/blob/master/Tests/Program.cs).
+```javascript
+function countUp() {
+    photino.Counter.CountUp();
+}
+
+function countDown() {
+    photino.Counter.CountDown();
+}
+```

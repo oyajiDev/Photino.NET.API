@@ -9,12 +9,12 @@ function $updateCount(message) {
 }
 
 function countUp() {
-    window.photino.CountUp([], $updateCount);
+    window.photino.Counter.CountUp([], $updateCount);
 }
 
 function countDown() {
     var count = parseInt(document.querySelector("#lbl_count").innerText);
     if (count > 0) {
-        window.photino.CountDown([], $updateCount);
+        window.photino.Counter.CountDown([], $updateCount);
     }
 }

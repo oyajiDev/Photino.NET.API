@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace PhotinoNET {
     public class PhotinoAPIWindow: PhotinoWindow {
-        private object JS_API { get; set; }
+        private Dictionary<String, object> jsAPIs { get; } = new Dictionary<String, object>();
         private List<String> excludeNames = new List<String>() { "GetType", "ToString", "Equals", "GetHashCode" };
         private String apiJsFile = null;
         private String tempHtmlFile = null;
@@ -18,15 +18,22 @@ namespace PhotinoNET {
         public Boolean RemoveTempFile { get; set; } = false;
         public new Boolean ContextMenuEnabled { get; set; } = true;
 
-        private List<String> apiMethodNames {
-            get => this.JS_API.GetType().GetMethods().Where(
-                x => !this.excludeNames.Contains(x.Name)
-            ).Select(x => x.Name).ToList();
+        private Dictionary<String, List<String>> apiMethodNames {
+            get {
+                var allMethodNames = new Dictionary<String, List<String>>();
+                foreach (var item in this.jsAPIs) {
+                    allMethodNames[item.Key] = item.Value.GetType().GetMethods().Where(
+                        x => !this.excludeNames.Contains(x.Name)
+                    ).Select(x => x.Name).ToList();
+                }
+
+                return allMethodNames;
+            }
         }
 
-        private object InvokeAPIMethod(String name, object[] parameters = null) {
-            System.Reflection.MethodInfo info = this.JS_API.GetType().GetMethod(name);
-            return info.Invoke(this.JS_API, parameters);
+        private object InvokeAPIMethod(String apiName, String methodName, object[] parameters = null) {
+            System.Reflection.MethodInfo info = this.jsAPIs[apiName].GetType().GetMethod(methodName);
+            return info.Invoke(this.jsAPIs[apiName], parameters);
         }
         private void onMessageReceive(object sender, String message) {
             var data = JsonConvert.DeserializeObject<Dictionary<String, dynamic>>(message);
@@ -34,7 +41,7 @@ namespace PhotinoNET {
 
             if (data["job"] == "init") {
                 result["state"] = "success";
-                result["methods"] = this.apiMethodNames;
+                result["apis"] = this.apiMethodNames;
                 result["contextMenuEnabled"] = this.ContextMenuEnabled;
 
                 if (this.RemoveTempFile || !this.DevToolsEnabled) {
@@ -51,9 +58,9 @@ namespace PhotinoNET {
                     }
                 }
             }
-            else if (this.apiMethodNames.Contains(data["job"])) {
+            else if (data["job"] == "invoke") {
                 try {
-                    var msg = this.InvokeAPIMethod(data["job"], data["args"].ToObject<object[]>());
+                    var msg = this.InvokeAPIMethod(data["api"], data["method"], data["args"].ToObject<object[]>());
                     if (msg is null) {
                         result["message"] = new Dictionary<String, dynamic>();
                     }
@@ -62,6 +69,8 @@ namespace PhotinoNET {
                     }
 
                     result["state"] = "success";
+                    result["api"] = data["api"];
+                    result["method"] = data["method"];
                 }
                 catch (Exception e) {
                     result["state"] = "fail";
@@ -95,7 +104,7 @@ namespace PhotinoNET {
         }
 
         public PhotinoAPIWindow RegisterAPI(object jsapi) {
-            this.JS_API = jsapi;
+            this.jsAPIs[jsapi.GetType().Name] = jsapi;
             this.Log($".RegisterAPI({jsapi})");
             return this;
         }
@@ -219,11 +228,11 @@ namespace PhotinoNET {
             return this;
         }
         public new PhotinoAPIWindow SetContextMenuEnabled(Boolean enabled) {
-            this.ContextMenuEnabled = enabled;
+            this.ContextMenuEnabled = this.DevToolsEnabled ? enabled : false;
             return this;
         }
         public new PhotinoAPIWindow SetDevToolsEnabled(Boolean enabled) {
-            base.SetDevToolsEnabled(enabled);
+            base.SetDevToolsEnabled(true);
             return this;
         }
         public new PhotinoAPIWindow SetFullScreen(Boolean fullScreen) {

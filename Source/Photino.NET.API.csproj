@@ -9,7 +9,7 @@
 
     <PropertyGroup>
         <PackageId>Photino.NET.API</PackageId>
-        <Version>0.0.3</Version>
+        <Version>0.0.4</Version>
         <Authors>oyajiDev</Authors>
 
         <PackageReadmeFile>README.md</PackageReadmeFile>

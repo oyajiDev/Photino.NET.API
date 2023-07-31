@@ -23,3 +23,14 @@
 - register "WindowClosingHandler" to remove temp files.
   - not working on Mac ARM(M1, M2).
 - update "Test", "README".
+
+<br />
+
+## 0.0.4
+- support multiple api register.
+  - call method by "name of API" and "namd of Method".
+- add "Responses" namespace.
+  - add "JsonResponse" class.
+- api does not work when "DevToolsEnabled" is true.
+  - fix(temporary).
+- update "Test", "README".
